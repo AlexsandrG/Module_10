@@ -8,19 +8,6 @@ import threading
 import time
 
 
-def battle(knight, days, enemies):
-    print(f"{knight.name}, на нас напали!")
-    for day in range(1, days + 1):
-        print(f"{knight.name}, сражается {day} день(дня)..., осталось {enemies} воинов.")
-        enemies -= knight.skill
-        if enemies <= 0:
-            print(f"{knight.name} одержал победу спустя {day} {'день' if day == 1 else 'дней'}!")
-            break
-        time.sleep(1)
-    else:
-        print("Битва закончилась!")
-
-
 class Knight(threading.Thread):
     def __init__(self, name, skill):
         threading.Thread.__init__(self)
@@ -30,7 +17,23 @@ class Knight(threading.Thread):
     def run(self):
         days = 100 // self.skill
         enemies = 100
-        battle(self, days, enemies)
+        battle(self)
+
+
+def battle(knight):
+    enemies = 100
+    print(f"{knight.name}, на нас напали!")
+    days = 0
+    while enemies > 0:
+        days += 1
+        enemies -= knight.skill
+        remaining_enemies = max(enemies, 0)
+        print(f"{knight.name}, сражается {days} день(дня)..., осталось {remaining_enemies} воинов.")
+        if remaining_enemies == 0:
+            print(f"{knight.name} одержал победу спустя {days} {'день' if days == 1 else 'дней'}!")
+        time.sleep(1)
+    if enemies > 0:
+        print("Битва закончилась!")
 
 
 knight1 = Knight("Sir Lancelot", 10)
@@ -43,3 +46,20 @@ knight1.join()
 knight2.join()
 
 print("Все битвы закончились!")
+
+# def battle(knight):
+#     enemies = 100
+#     print(f"{knight.name}, на нас напали!")
+#     days = 0
+#     while enemies > 0:
+#         days += 1
+#         enemies -= knight.skill
+#         remaining_enemies = max(enemies, 0)
+#         print(f"{knight.name}, сражается {days} день(дня)..., осталось {remaining_enemies} воинов.")
+#         if remaining_enemies == 0:
+#             print(f"{knight.name} одержал победу спустя {days} {'день' if days == 1 else 'дней'}!")
+#         time.sleep(1)
+#     if enemies > 0:
+#         print("Битва закончилась!")
+
+
