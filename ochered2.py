@@ -1,18 +1,27 @@
 import threading
-import time
 from queue import Queue
+import time
 
 class Table:
     def __init__(self, number):
         self.number = number
         self.is_busy = False
 
+
+class Cafe:
+    def __init__(self, tables):
+        self.customer_arrival = None
+        self.tables = tables
+        self.queue = Queue()
+
+
 class Customer(threading.Thread):
-    def __init__(self, number, table, cafe):
-        threading.Thread.__init__(self)
+    def __init__(self, number, cafe):
+        super().__init__()
         self.number = number
-        self.table = table
         self.cafe = cafe
+        self.table = None
+
 
     def run(self):
         print(f"Посетитель номер {self.number} прибыл.")
@@ -31,14 +40,12 @@ class Customer(threading.Thread):
             time.sleep(5)
             print(f"Посетитель номер {self.number} покушал и ушёл. (конец обслуживания)")
 
-class Cafe:
-    def __init__(self, tables):
-        self.tables = tables
-        self.queue = Queue()
 
-    def customer_arrival(self):
-        for i in range(1, 21):
-            Customer(i, None, self).start()
+def customer_arrival(self):
+    for i in range(20):
+        time.sleep(1)
+        customer = Customer(i + 1, self)
+        customer.start()
 
 # Создаем столики в кафе
 table1 = Table(1)
